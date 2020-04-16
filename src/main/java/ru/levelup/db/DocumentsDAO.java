@@ -22,22 +22,25 @@ public class DocumentsDAO {
                                 String streetHouse, String headFIO, String accountantFIO){
 
         Importer importer = new Importer();
+
+        importer.setImporterName(name);
+        importer.setINN(inn);
+        importer.setCountry(country);
+        importer.setCity(city);
+        importer.setStreetHouse(streetHouse);
+        importer.setHeadFIO(headFIO);
+        importer.setAccountantFIO(accountantFIO);
+
         manager.getTransaction().begin();
+
         try {
-            importer.setImporterName(name);
-            importer.setINN(inn);
-            importer.setCountry(country);
-            importer.setCity(city);
-            importer.setStreetHouse(streetHouse);
-            importer.setHeadFIO(headFIO);
-            importer.setAccountantFIO(accountantFIO);
             manager.persist(importer);
 
             } catch (Throwable cause) {
                 manager.getTransaction().rollback();
                 throw cause;
             }
-            manager.getTransaction().commit();
+        manager.getTransaction().commit();
 
         return importer;
     }
