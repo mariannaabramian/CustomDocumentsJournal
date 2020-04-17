@@ -4,9 +4,15 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.levelup.model.Color;
 import ru.levelup.model.Group;
 import ru.levelup.model.User;
+import ru.levelup.tests.TestConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,12 +21,19 @@ import javax.persistence.PersistenceException;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
 public class UsersDAOTest {
-    private EntityManagerFactory factory;
-    private EntityManager manager;
+    //private EntityManagerFactory factory;
+    //private EntityManager manager;
+    @Autowired
     private UsersDAO users;
 
-    @Before
+    @Autowired
+    @Qualifier("defaultManager")
+    private EntityManager manager;
+
+    /*@Before
     public void connect() {
         factory = Persistence.createEntityManagerFactory("TestPersistenceUnit");
         manager = factory.createEntityManager();
@@ -36,6 +49,8 @@ public class UsersDAOTest {
             factory.close();
         }
     }
+    */
+
 
     @Test
     public void createGroup() {

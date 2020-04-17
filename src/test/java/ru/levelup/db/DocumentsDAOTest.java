@@ -3,7 +3,13 @@ package ru.levelup.db;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.levelup.model.*;
+import ru.levelup.tests.TestConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,13 +17,24 @@ import javax.persistence.Persistence;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
 public class DocumentsDAOTest {
-    private EntityManagerFactory factory;
+    //private EntityManagerFactory factory;
+    //private EntityManager manager;
+
+
+    @Autowired
+    @Qualifier("defaultManager")
     private EntityManager manager;
+
+    @Autowired
     private UsersDAO usersDAO;
+
+    @Autowired
     private DocumentsDAO documentsDAO;
 
-    @Before
+    /*@Before
     public void connect() {
         factory = Persistence.createEntityManagerFactory("TestPersistenceUnit");
         manager = factory.createEntityManager();
@@ -33,7 +50,7 @@ public class DocumentsDAOTest {
         if (factory != null) {
             factory.close();
         }
-    }
+    }*/
 
 
     @Test

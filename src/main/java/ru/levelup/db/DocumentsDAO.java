@@ -1,16 +1,21 @@
 package ru.levelup.db;
 
 import com.sun.istack.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 import ru.levelup.model.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.Objects;
 
+@Repository
 public class DocumentsDAO {
-    private EntityManager manager;
+    private final EntityManager manager;
 
-    public DocumentsDAO(EntityManager manager) {
+    @Autowired
+    public DocumentsDAO(@Qualifier("defaultManager") EntityManager manager) {
         Objects.requireNonNull(manager, "EntityManager shouldn't be null");
         this.manager = manager;
     }
