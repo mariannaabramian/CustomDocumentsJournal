@@ -51,13 +51,13 @@
     <p>
         <label>
             HeadFIO:
-            <input type="text" name="HeadFIO" value="${form.HeadFIO}">
+            <input type="text" name="headFIO" value="${form.headFIO}">
         </label>
     </p>
     <p>
         <label>
             AccountantFIO:
-            <input type="text" name="AccountantFIO" value="${form.AccountantFIO}">
+            <input type="text" name="accountantFIO" value="${form.accountantFIO}">
         </label>
     </p>
     <p>
