@@ -4,25 +4,21 @@ import com.sun.istack.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.levelup.model.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.Objects;
 
 @Repository
 public class DocumentsDAO {
-    private final EntityManager manager;
-
-    @Autowired
-    public DocumentsDAO(@Qualifier("defaultManager") EntityManager manager) {
-        Objects.requireNonNull(manager, "EntityManager shouldn't be null");
-        this.manager = manager;
-    }
-
-
+    @PersistenceContext
+    private EntityManager manager;
 
     // сохр нового импортера
+    @Transactional
     public Importer createImporter(String name, String inn, String country, String city,
                                 String streetHouse, String headFIO, String accountantFIO){
 
@@ -36,19 +32,11 @@ public class DocumentsDAO {
         importer.setHeadFIO(headFIO);
         importer.setAccountantFIO(accountantFIO);
 
-        manager.getTransaction().begin();
-
-        try {
-            manager.persist(importer);
-
-            } catch (Throwable cause) {
-                manager.getTransaction().rollback();
-                throw cause;
-            }
-        manager.getTransaction().commit();
+        manager.persist(importer);
 
         return importer;
     }
+
 
     @Nullable
     public Importer findImporterByName(String name) {
@@ -61,41 +49,30 @@ public class DocumentsDAO {
         }
     }
 
+    @Transactional
     public Document createDocument(Importer importer, DocType docType, String title, String importerDocumentNumber){
         Document document = new Document();
-        manager.getTransaction().begin();
-        try {
-            document.setImporter(importer);
-            document.setDocType(docType);
-            document.setTitle(title);
-            document.setImporterDocumentNumber(importerDocumentNumber);
-            document.setProcessedFlag(false);
 
-            manager.persist(document);
-        } catch (Throwable cause) {
-            manager.getTransaction().rollback();
-            throw cause;
-        }
-        manager.getTransaction().commit();
+        document.setImporter(importer);
+        document.setDocType(docType);
+        document.setTitle(title);
+        document.setImporterDocumentNumber(importerDocumentNumber);
+        document.setProcessedFlag(false);
+
+        manager.persist(document);
 
         return document;
     }
 
-
+    @Transactional
     public Journal setNewDocumentStatus(Document document, User inspector){
         Journal journal = new Journal();
-        manager.getTransaction().begin();
-        try {
-            journal.setDocument(document);
-            journal.setInspector(inspector);
-            journal.setStatus(DocStatus.NEW);
 
-            manager.persist(journal);
-        } catch (Throwable cause) {
-            manager.getTransaction().rollback();
-            throw cause;
-        }
-        manager.getTransaction().commit();
+        journal.setDocument(document);
+        journal.setInspector(inspector);
+        journal.setStatus(DocStatus.NEW);
+
+        manager.persist(journal);
 
         return journal;
     }
@@ -110,66 +87,49 @@ public class DocumentsDAO {
         }
     }
 
+    @Transactional
     public Journal setValidatedDocumentStatus(String docNumber, User inspector){
         Document document = new Document();
         document = this.findDocumentByNumber(docNumber);
 
         Journal journal = new Journal();
-        manager.getTransaction().begin();
-        try {
-            journal.setDocument(document);
-            journal.setInspector(inspector);
-            journal.setStatus(DocStatus.VALIDATED);
 
-            manager.persist(journal);
-        } catch (Throwable cause) {
-            manager.getTransaction().rollback();
-            throw cause;
-        }
-        manager.getTransaction().commit();
+        journal.setDocument(document);
+        journal.setInspector(inspector);
+        journal.setStatus(DocStatus.VALIDATED);
 
         return journal;
     }
 
+    @Transactional
     public Journal setValidationErrorDocumentStatus(String docNumber, String validationErrorText, User inspector){
         Document document = new Document();
         document = this.findDocumentByNumber(docNumber);
 
         Journal journal = new Journal();
-        manager.getTransaction().begin();
-        try {
-            journal.setDocument(document);
-            journal.setInspector(inspector);
-            journal.setStatus(DocStatus.VALIDATION_ERROR);
-            journal.setValidationErrorText(validationErrorText);
 
-            manager.persist(journal);
-        } catch (Throwable cause) {
-            manager.getTransaction().rollback();
-            throw cause;
-        }
-        manager.getTransaction().commit();
+        journal.setDocument(document);
+        journal.setInspector(inspector);
+        journal.setStatus(DocStatus.VALIDATION_ERROR);
+        journal.setValidationErrorText(validationErrorText);
+
+        manager.persist(journal);
 
         return journal;
     }
 
+    @Transactional
     public Journal setRegisteredDocumentStatus(String docNumber, String registrationNumber, User inspector){
         Document document = new Document();
         document = this.findDocumentByNumber(docNumber);
 
         Journal journal = new Journal();
-        manager.getTransaction().begin();
-        try {
-            journal.setDocument(document);
-            journal.setInspector(inspector);
-            journal.setStatus(DocStatus.REGISTERED);
 
-            manager.persist(journal);
-        } catch (Throwable cause) {
-            manager.getTransaction().rollback();
-            throw cause;
-        }
-        manager.getTransaction().commit();
+        journal.setDocument(document);
+        journal.setInspector(inspector);
+        journal.setStatus(DocStatus.REGISTERED);
+
+        manager.persist(journal);
 
         return journal;
     }

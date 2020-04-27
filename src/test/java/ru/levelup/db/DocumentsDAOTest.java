@@ -14,6 +14,7 @@ import ru.levelup.tests.TestConfiguration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.*;
 
@@ -23,9 +24,7 @@ public class DocumentsDAOTest {
     //private EntityManagerFactory factory;
     //private EntityManager manager;
 
-
-    @Autowired
-    @Qualifier("defaultManager")
+    @PersistenceContext
     private EntityManager manager;
 
     @Autowired
